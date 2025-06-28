@@ -1,0 +1,1 @@
+person appears to be running in straight line then jumps over something and continues running. 

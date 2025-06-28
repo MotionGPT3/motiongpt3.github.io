@@ -1,0 +1,553 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="a bimodal motion-language model that treats human motion as a second modality, decoupling motion modeling via separate model parameters and enabling both effective cross-modal interaction and efficient multimodal scaling training.">
+  <meta name="keywords" content="Motion generation, multi-modal understanding and generation">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MotionGPT3: Human Motion as a Second Modality</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+  
+        <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link" style="font-size: 1.3rem;">
+            More Research
+          </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://motion-gpt.github.io/">
+              MotionGPT
+            </a>
+            <a class="navbar-item" href="https://chenxin.tech/mld/">
+              MLD
+            </a>
+            <!-- <a class="navbar-item" href="https://latentfusion.github.io">
+              LatentFusion
+            </a> -->
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </nav>
+  
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">MotionGPT3: Human Motion as a Second Modality</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://xxxx">Bingfan Zhu</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://xxxx">Biao Jiang</a><sup>3</sup>,</span>
+            <span class="author-block">
+              <a href="http://xxxx">Sunyi Wang</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://xxxx">Shixiang Tang</a><sup>4</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://xxxx">Tao Chen</a><sup>3</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://xxxx">Linjie Luo</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://xxxx">Youyi Zheng</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="http://xxxx">Xin Chen</a><sup>2</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Zhejiang University</span>
+            <span class="author-block"><sup>2</sup>Bytedance</span>
+            <span class="author-block"><sup>3</sup>Fudan University</span>
+            <span class="author-block"><sup>4</sup>The Chinese University of Hong Kong</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <l href="https://arxiv.org/pdf/xxxx"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </l>
+              </span>
+              <span class="link-block">
+                <l href="https://arxiv.org/abs/xxxx"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </l>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <l href="https://www.youtube.com/watch?v=xxxx"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </l>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <l href="https://github.com/OpenMotionLab/MotionGPT3"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                </l>
+              </span>
+            </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="hero">
+  <div class="container is-max-desktop">
+    <div class="hero-body">
+      <div class="columns is-centered">
+      <!-- <figure id="teaser" autoplay muted loop playsinline width="100%"> -->
+        <!-- <img src="./static/figures/teaser.png" width="1000px" > -->
+        <!-- <img src="./static/figures/teaser.png"> -->
+        <video poster="" id="teaser" autoplay controls muted loop playsinline height="100%">
+          <source src="./static/videos/teaser.mp4"
+                  type="video/mp4">
+          <style>
+            video::-webkit-media-controls-enclosure {
+            display: none;
+            }
+          </style>
+        </video>
+        <!-- height="200px" -->
+        <!-- <a href="./teaser_image.png"><img src = "./teaser_image.png" height="300px"></img></href></a><br> -->
+      <!-- </figure> -->
+      </div>
+      <h2 class="subtitle has-text-centered">
+        <span class="mgpt3">MotionGPT3</span> is a hybrid motion-language model designed to process arbitrary input sequence of motion or language and generate outputs in either modality.
+      </h2>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- text-to-motion results here -->
+<section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <!-- 选择栏 -->
+      <div class="tabs is-toggle is-centered">
+        <ul>
+          <li class="is-active" data-target="text-to-motion">
+            <a>Text-to-Motion</a>
+          </li>
+          <li data-target="motion-to-text">
+            <a>Motion-to-Text</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- <h2 class="title is-4 has-text-centered" >Text-to-Motion</h2> -->
+    <div class="carousel-wrapper" id="text-to-motion">
+      <h2 class="title is-4" >Text-to-Motion</h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item item-3 has-text-centered">
+          <div class="caption "> A person is crouched down and walking around sneakily.   </div>
+          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/t2m/3_out_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-4 has-text-centered">
+          <div class="caption "> A man swimming using both hands together while kicking feet in unison.  </div>
+          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/t2m/4_out_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-5 has-text-centered">
+          <div class="caption "> Person sits on the ledge of something then gets off and walks away.  </div>
+          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/t2m/5_out_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-23 has-text-centered">
+          <div class="caption "> A person stands still with both arms raised at shoulder height. </div>
+          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/t2m/23_out_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-24 has-text-centered">
+          <div class="caption "> The person jumps over something and lands on feet. </div>
+          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/t2m/24_out_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-26 has-text-centered">
+          <div class="caption "> A figure steps backward cockily, swinging their arms. </div>
+          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/t2m/26_out_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-27 has-text-centered">
+          <div class="caption "> He is running in straight line then jumps over something and continues running. </div>
+          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/t2m/27_out_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-28 has-text-centered">
+          <div class="caption "> a person walks forward with their right leg limping.  </div>
+          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/t2m/28_out_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+        <div class="item item-29 has-text-centered">
+          <div class="caption "> A person walks forward using left hand to steady themselves on an object.  </div>
+          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/t2m/29_out_mesh.mp4"
+                    type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+    <!-- </div>
+  </div>
+</section> -->
+
+
+<!-- motion-to-text results here -->
+<!-- <section class="hero is-light is-small">
+  <div class="hero-body">
+    <div class="container"> -->
+      <!-- <h2 class="title is-4 has-text-centered" >Text-to-Motion</h2> -->
+    <div class="carousel-wrapper" id="motion-to-text">
+      <h2 class="title is-4" >Motion-to-Text</h2>
+      <div id="results-carousel" class="carousel results-carousel">
+        <div class="item has-text-centered">
+          <video class="no-border" poster="" id="steve" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/m2t/example0.mp4"
+                    type="video/mp4">
+          </video>
+          <div class="caption1 ">"The person is walking forward and loses their balance on one foot but they continue to walk behind."</div>
+        </div>
+        <div class="item has-text-centered">
+          <video class="no-border" poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/m2t/example1.mp4"
+                    type="video/mp4">
+          </video>
+          <div class="caption1 ">"A person walks to the right, then walks to the left, then returns to their starting position."</div>
+        </div>
+        <div class="item has-text-centered">
+          <video class="no-border" poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/m2t/example2.mp4"
+                    type="video/mp4">
+          </video>
+          <div class="caption1 ">"A person brings the ball back to his throwing motion and throws again."</div>
+        </div>
+        <div class="item has-text-centered">
+          <video class="no-border" poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/m2t/example3.mp4"
+                    type="video/mp4">
+          </video>
+          <div class="caption1 ">"A person takes a few steps forward, then does a cartwheel diagonally to the right then takes a step back."</div>
+        </div>
+        <div class="item has-text-centered">
+          <video class="no-border" poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+            <source src="./static/videos/m2t/example4.mp4"
+                    type="video/mp4">
+          </video>
+          <div class="caption1 ">"A person is shaking his hand."</div>
+        </div>
+        <div class="item has-text-centered">
+            <video class="no-border" poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/m2t/example5.mp4"
+                      type="video/mp4">
+            </video>
+            <div class="caption1 ">"A person turns around, picks up what is moving and leans down to pick it up."</div>
+        </div>
+        <div class="item has-text-centered">
+            <video class="no-border" poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/m2t/example6.mp4"
+                      type="video/mp4">
+            </video>
+            <div class="caption1 ">"A person holds their arms in front of them and does four squats."</div>
+        </div>
+        <div class="item has-text-centered">
+            <video class="no-border" poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/m2t/example7.mp4"
+                      type="video/mp4">
+            </video>
+            <div class="caption1 ">"A person raises their arms around themselves and it and then motions them violently."</div>
+        </div>
+        <div class="item has-text-centered">
+            <video class="no-border" poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/m2t/example8.mp4"
+                      type="video/mp4">
+            </video>
+            <div class="caption1 ">"A person lifts something, tilting the other person and places it back down."</div>
+        </div>
+        <div class="item has-text-centered">
+            <video class="no-border" poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/m2t/example9.mp4"
+                      type="video/mp4">
+            </video>
+            <div class="caption1 ">"A person walks up steps, starts upstairs and then the stairs back down."</div>
+        </div>
+        <div class="item has-text-centered">
+            <video class="no-border" poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/m2t/example10.mp4"
+                      type="video/mp4">
+            </video>
+            <div class="caption1 ">"A figure walks forward, picks something up and puts it on the table."</div>
+        </div>
+        <div class="item has-text-centered">
+            <video class="no-border" poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
+              <source src="./static/videos/m2t/example10.mp4"
+                      type="video/mp4">
+            </video>
+            <div class="caption1 ">"A person lifts something, tilting the other person or places it back down."</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+        <!-- <div class="column is-four-fifths"> -->
+        <div class="column is-full">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+        <p>
+            Though recent advances in multimodal models have demonstrated strong capabilities and opportunities in unified understanding and generation, the development of unified motion-language models remains underexplored. To enable such models with high-fidelity human motion, two core challenges must be addressed. The first is the reconstruction gap between the continuous motion modality and discrete representation in an autoregressive manner, and the second is the degradation of language intelligence during unified training.
+        </p>
+            Inspired by the mixture of experts, we propose MotionGPT3, a bimodal motion-language model that treats human motion as a second modality, decoupling motion modeling via separate model parameters and enabling both effective cross-modal interaction and efficient multimodal scaling training.
+        <p>
+        </p>
+            To preserve language intelligence, the text branch retains the original structure and parameters of the pretrained language model, while a new motion branch is integrated via a shared attention mechanism, enabling bidirectional information flow between two modalities.
+        </p>
+        <p>
+            We first employ a motion Variational Autoencoder (VAE) to encode raw human motion into latent representations.
+        </p>
+        <p>
+            Based on this continuous latent space, the motion branch predicts motion latents directly from intermediate hidden states using a diffusion head, bypassing discrete tokenization.
+        </p>
+        <p>
+            Extensive experiments show that our approach achieves competitive performance on both motion understanding and generation tasks while preserving strong language capabilities, establishing a unified bimodal motion diffusion framework within an autoregressive manner.
+        </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+
+  </div>
+</section>
+
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-3 publication-title">Our method</h1>
+          <!-- <img src="./static/figures/pipeline.png" width="800px" >
+          <p>
+            We propose a bimodal motion-language framework to process language and motion with their owm expert 
+            and represent motion in an VAE latent space, supervise the predicted motion latents with a diffusion head. 
+          </p>
+        </div>
+        <div class="column has-text-centered">
+          <h1 class="title is-3 publication-title">Training Scheme</h1> -->
+          <img src="./static/figures/training.png"  >
+          <p>
+            We introduce a three-stage alignment for our hybrid motion-language model. 
+            First the model learn to generate motion properly. 
+            Then we further align the motion branch with language by introducing motion reasoning. 
+            Finally, we fine-tune the model by joint training with unfrozen text modules. 
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    <!-- Animation. -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h1 class="title is-3 has-text-centered">Experiments</h1>
+        
+        <div class="column">
+        <h2 class="title is-4">Training Speed</h2>
+        <!-- <img src="./static/figures/pipeline.png" width="800px" >
+          <p>
+            We propose a bimodal motion-language framework to process language and motion with their owm expert 
+            and represent motion in an VAE latent space, supervise the predicted motion latents with a diffusion head. 
+          </p>
+        </div>
+        <div class="column has-text-centered">
+          <h1 class="title is-3 publication-title">Training Scheme</h1> -->
+          <img src="./static/figures/training speed.png"  >
+          <p>
+            Comparison on different model settings of continuous/ discrete representation, 
+            and unified model/ bimodal architecture (Ours) on motion generation of validation set. 
+            Our hybrid language-motion architecture with continuous motion representation 
+            helps accelerate training for about 2x, as well as achieves better quality.
+          </p>
+        </div>
+
+        <!-- <div class="column">
+          <h2 class="title is-4">Mot architecture</h2>
+            <img src="./static/figures/mot_experiments.png"  >
+            <p>
+              Comparison on different model settings of continuous/ discrete representation, 
+              and unified model/ bimodal architecture (Ours) on motion generation of validation set. 
+              Our hybrid language-motion architecture with continuous motion representation 
+              helps accelerate training for about 2x, as well as achieves better quality.
+            </p>
+          </div> -->
+
+    <!-- Paper video. -->
+    &nbsp;
+    <h2 class="title is-4">Comparisons</h2>
+    <div class="columns is-centered has-text-centered">
+        <!-- <div class="column is-four-fifths"> -->
+      <div class="column is-full">
+        <!-- <h2 class="title is-3">Video</h2> -->
+        <div class="publication-video">
+          <!-- <iframe src="static/videos/MotionGPT3_Video.mp4"
+                  frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe> -->
+                  <video controls muted poster="static/figures/video_cover.png">
+                    <source src="static/videos/MotionGPT3_Video.mp4" type="video/mp4">
+                  </video>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>
+      <!-- TODO-Arxiv -->
+    </code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <a class="icon-link"
+         href="./static/motiongpt3_paper.pdf">
+        <i class="fas fa-file-pdf"></i>
+      </a>
+      &nbsp;
+      <a class="icon-link" href="https://github.com/OpenMotionLab/MotionGPT3" class="external-link" disabled>
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <!-- <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            This means you are free to borrow the <a
+              href="https://github.com/MotionGPT3/MotionGPT3.github.io">source code</a> of this website,
+            we just ask that you link back to this page in the footer.
+            Please remember to remove the analytics code included in the header of the website which
+            you do not want on your website.
+          </p>
+        </div>
+      </div>
+    </div> -->
+  </div>
+</footer>
+
+  
+</body>
+</html>
