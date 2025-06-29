@@ -60,10 +60,10 @@
             More Research
           </a>
           <div class="navbar-dropdown">
-            <a class="navbar-item" href="https://motion-gpt.github.io/">
+            <a class="navbar-item" href="https://motion-gpt.github.io/" style="font-size: 1.1rem;">
               MotionGPT
             </a>
-            <a class="navbar-item" href="https://chenxin.tech/mld/">
+            <a class="navbar-item" href="https://chenxin.tech/mld/" style="font-size: 1.1rem;">
               MLD
             </a>
             <!-- <a class="navbar-item" href="https://latentfusion.github.io">
@@ -85,26 +85,26 @@
           <h1 class="title is-1 publication-title">MotionGPT3: Human Motion as a Second Modality</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
-              <a href="https://xxxx">Bingfan Zhu</a><sup>1</sup>,</span>
+              <a href="">Bingfan Zhu</a><sup>1</sup>,</span>
             <span class="author-block">
-              <a href="https://xxxx">Biao Jiang</a><sup>3</sup>,</span>
+              <a href="">Biao Jiang</a><sup>3</sup>,</span>
             <span class="author-block">
-              <a href="http://xxxx">Sunyi Wang</a><sup>1</sup>,
+              <a>Sunyi Wang</a><sup>1</sup>,
             </span>
             <span class="author-block">
-              <a href="https://xxxx">Shixiang Tang</a><sup>4</sup>,
+              <a href="https://tangshixiang.github.io/">Shixiang Tang</a><sup>4</sup>,
             </span>
             <span class="author-block">
-              <a href="https://xxxx">Tao Chen</a><sup>3</sup>,
+              <a href="https://eetchen.github.io/">Tao Chen</a><sup>3</sup>,
             </span>
             <span class="author-block">
-              <a href="https://xxxx">Linjie Luo</a><sup>2</sup>,
+              <a href="https://linjieluo.github.io/">Linjie Luo</a><sup>2</sup>,
             </span>
             <span class="author-block">
-              <a href="https://xxxx">Youyi Zheng</a><sup>1</sup>,
+              <a href="https://www.zyouyi.com/">Youyi Zheng</a><sup>1</sup>,
             </span>
             <span class="author-block">
-              <a href="http://xxxx">Xin Chen</a><sup>2</sup>
+              <a href="https://chenxin.tech/">Xin Chen</a><sup>2</sup>
             </span>
           </div>
 
@@ -171,7 +171,7 @@
       <!-- <figure id="teaser" autoplay muted loop playsinline width="100%"> -->
         <!-- <img src="./static/figures/teaser.png" width="1000px" > -->
         <!-- <img src="./static/figures/teaser.png"> -->
-        <video poster="" id="teaser" autoplay controls muted loop playsinline height="100%">
+        <video poster="" id="teaser" autoplay controls muted playsinline height="100%">
           <source src="./static/videos/teaser.mp4"
                   type="video/mp4">
           <style>
@@ -386,25 +386,19 @@
   <div class="container is-max-desktop">
     <!-- Abstract. -->
     <div class="columns is-centered has-text-centered">
-        <!-- <div class="column is-four-fifths"> -->
-        <div class="column is-full">
+        <div class="column is-four-fifths">
+        <!-- <div class="column is-full"> -->
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
         <p>
             Though recent advances in multimodal models have demonstrated strong capabilities and opportunities in unified understanding and generation, the development of unified motion-language models remains underexplored. To enable such models with high-fidelity human motion, two core challenges must be addressed. The first is the reconstruction gap between the continuous motion modality and discrete representation in an autoregressive manner, and the second is the degradation of language intelligence during unified training.
         </p>
             Inspired by the mixture of experts, we propose MotionGPT3, a bimodal motion-language model that treats human motion as a second modality, decoupling motion modeling via separate model parameters and enabling both effective cross-modal interaction and efficient multimodal scaling training.
-        <p>
-        </p>
             To preserve language intelligence, the text branch retains the original structure and parameters of the pretrained language model, while a new motion branch is integrated via a shared attention mechanism, enabling bidirectional information flow between two modalities.
         </p>
         <p>
             We first employ a motion Variational Autoencoder (VAE) to encode raw human motion into latent representations.
-        </p>
-        <p>
             Based on this continuous latent space, the motion branch predicts motion latents directly from intermediate hidden states using a diffusion head, bypassing discrete tokenization.
-        </p>
-        <p>
             Extensive experiments show that our approach achieves competitive performance on both motion understanding and generation tasks while preserving strong language capabilities, establishing a unified bimodal motion diffusion framework within an autoregressive manner.
         </p>
         </div>
